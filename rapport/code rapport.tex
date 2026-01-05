@@ -265,14 +265,20 @@ function pl_load(string $dir, string $token): ?array {
 
 \textbf{Analyse :} Chaque playlist est sauvegardée dans un fichier JSON avec un nom aléatoire (token). Cela permet le partage via URL sans base de données SQL.
 
-\subsection{Collaboration avec l'IA (Section Obligatoire)}
+\subsection{Collaboration avec l'IA }
+\subsubsection{Présentaton de notre IA}
+Gemini est une famille de modèles d’intelligence artificielle développée par Google, reposant sur les modèles de langage de grande taille (Large Language Models). Son fonctionnement est basé sur des réseaux de neurones profonds capables d’analyser et de générer du langage naturel.
+L’une des principales caractéristiques de Gemini est son aspect multimodal : le modèle peut traiter simultanément différents types de données tels que le texte, les images ou le code. Lors de son entraînement, Gemini apprend à identifier des régularités statistiques à partir de grandes quantités de données, afin de prédire la suite la plus probable d’une séquence en fonction du contexte.
+Lorsqu’une requête est soumise, celle-ci est convertie en une représentation mathématique permettant au modèle d’en comprendre le sens et l’intention. La réponse est ensuite générée de manière progressive, mot par mot, en tenant compte du contexte global. Bien que performant, Gemini repose sur des calculs probabilistes et ne possède pas de compréhension consciente, ce qui implique la nécessité de garder un esprit critique quant aux réponses produites.
+Si tu veux, je peux encore réduire à un seul paragraphe ou l’adapter exactement au nombre de lignes demandé.
+\subsubsection{Utilisation de notre IA}
 Nous avons utilisé l'IA (Gemini) comme assistant technique :
 \begin{itemize}
     \item \textbf{Aide API :} L'IA nous a aidés à comprendre la structure JSON d'iTunes, à manipuler le codage du Latex et du site et aussi rédiger le Read.me.
     \item \textbf{Débogage :} Résolution de problèmes URL et regex.
 \end{itemize}
 \subsection{Tâches non réalisées}
-Nous ne pouvons pas éouter les musiques directement sur le site en entier (que des extraits).
+Nous ne pouvons pas éouter les musiques directement sur le site en entier (que des extraits), la lecture n'est pas enchaînée. Si le style n'est pas trouvé à telle époque, pas d'alternative de playlist proposée. 
 \subsection{Répartition des tâches}
 Hamza a eu l'idée du site et du projet, Reda a fait le choix de l'IA. Ils ont donc mis leurs idées en commun et collaboré pour créer le projet. Hamza et Reda, grâce à Gemini ont codé le site ensemble et l'ont testé. Hamza s'est chargé des API, du JSON tandis que Reda plus du php et du "squelette". Ensuite, Reda a rédigé la majorité du rapport et Hamza s'est chargé du GitHub.
 
@@ -291,7 +297,7 @@ Hamza a eu l'idée du site et du projet, Reda a fait le choix de l'IA. Ils ont d
 Ce projet nous a permis de manipuler des APIs REST, de traiter du JSON en PHP et de gérer les contraintes du web. L'export CSV rend l'outil fonctionnel. Ce projet permet de générer des playlists intelligentes et permet un gain de temps en quelques clics.
 
 \subsection{Perspectives}
-Améliorations possibles : système de cache plus agressif et lecture enchaînée (autoplay).
+Améliorations possibles : système de cache plus agressif et lecture enchaînée (autoplay). Créer une application est possible et on peu élargir le choix des musiques avec une plus grande BD.
 
 % --- 8. WEBOGRAPHIE ---
 \section{Webographie}
@@ -322,17 +328,3 @@ Améliorations possibles : système de cache plus agressif et lecture enchaîné
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=13cm]{IMG_4847.jpeg}
-    \caption{Liste des résultats générés}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=13cm]{IMG_4848.jpeg}
-    \caption{Lecteur audio et téléchargement}
-\end{figure}
-
-\subsection{Annexe C : Structure CSV}
-Colonnes : Titre, Artiste, Durée, URL.
-
-\end{document}
