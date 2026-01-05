@@ -1,0 +1,330 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{float}
+% --- PACKAGES POUR LES BORDURES ---
+\usepackage{tikz}       
+\usepackage{eso-pic}    
+
+% --- MARGES GLOBALES ---
+\geometry{hmargin=2.5cm,vmargin=2.5cm}
+
+% Configuration des couleurs pour le code
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    % On utilise scriptsize pour que le code prenne moins de place et évite les pages vides
+    basicstyle=\ttfamily\scriptsize, 
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=PHP
+}
+\lstset{style=mystyle}
+
+\begin{document}
+
+% --- PAGE DE GARDE ---
+\begin{titlepage}
+    \newgeometry{hmargin=4.5cm,vmargin=2.5cm}
+    \AddToShipoutPictureBG*{%
+        \begin{tikzpicture}[overlay,remember picture]
+            \node[anchor=west, inner sep=0pt] at (current page.west) {
+                \includegraphics[height=\paperheight]{Bordure.png}
+            };
+            \node[anchor=east, inner sep=0pt] at (current page.east) {
+                \reflectbox{\includegraphics[height=\paperheight]{Bordure.png}}
+            };
+        \end{tikzpicture}
+    }
+    \centering
+    \includegraphics[width=6cm]{logo_Paris_Nanterre_couleur_RVB.png} 
+    \vspace{1cm}
+    {\Large Université Paris Nanterre \par}
+    \vspace{0.2cm}
+    {\Large L2 Informatique \par}
+    \vspace{2cm}
+    {\Huge \textbf{Rapport de Projet Informatique} \par}
+    \vspace{0.8cm}
+    {\Huge \textbf{SmartMix} \par}
+    \vspace{0.3cm}
+    {\Large Générateur de Playlist Web \par}
+    \vspace{3cm}
+    \textbf{\Large Membres du groupe :} \par
+    \vspace{0.5cm}
+    {\Large Moutaouakkil Mohamed Reda - 44004006 \par}
+    {\Large Garbaa Hamza - 44013028 \par}
+    \vspace{2cm}
+    \textbf{Lien vers le dépôt GitHub :} \par
+    \url{https://github.com/hamza-garbaa76/SmartMix.git} 
+    \vfill
+    {\Large Semestre 3 - Année 2025/2026 \par}
+    \vspace{1cm}
+    \restoregeometry
+\end{titlepage}
+
+% --- SOMMAIRE ---
+\tableofcontents
+\newpage
+
+% --- 1. INTRODUCTION ---
+\section{Introduction}
+L'écoute musicale en ligne repose souvent sur des algorithmes complexes et opaques. Avec notre projet **SmartMix**, nous avons voulu créer une solution Web transparente et rapide.
+
+SmartMix est une application web développée en PHP 8 qui permet de générer des playlists sur-mesure en temps réel. Contrairement aux solutions statiques, notre application interroge en direct les bases de données d'**iTunes** et d'**Internet Archive** pour offrir une variété musicale instantanée basée sur les choix de l'utilisateur (style, époque, durée).
+
+% --- 2. ENVIRONNEMENT ---
+\section{Environnement de travail}
+Le projet a été réalisé en binôme, en alternant développement local et collaboration à distance.
+\begin{itemize}
+    \item \textbf{Langage Backend :} PHP 8.x (Gestion de la logique et des API).
+    \item \textbf{Langage Frontend :} HTML5, CSS3 (Interface responsive).
+    \item \textbf{Outils :} Visual Studio Code, Git/GitHub.
+    \item \textbf{Serveur :} WAMP / XAMPP pour l'exécution locale.
+\end{itemize}
+
+% --- 3. DESCRIPTION ---
+\section{Description du projet et objectifs}
+L'objectif est de concevoir un "agrégateur musical" capable de construire une playlist cohérente à partir de sources multiples.
+Les fonctionnalités principales sont :
+\begin{enumerate}
+    \item \textbf{Multi-critères :} Sélection multiple de styles (Rock, Jazz...) et d'époques (décennies).
+    \item \textbf{Génération Live :} Utilisation des API iTunes (pour la rapidité) et Internet Archive (pour la rareté).
+    \item \textbf{Algorithme de durée :} Remplissage intelligent pour atteindre la durée cible (ex: 60 min) avec une tolérance de $\pm 1$ minute.
+    \item \textbf{Export :} Possibilité de télécharger la playlist générée au format CSV.
+\end{enumerate}
+
+% --- 4. TECHNOLOGIES ---
+\section{Bibliothèques et APIs utilisées}
+Nous avons choisi de ne pas utiliser de base de données locale, mais de tout récupérer dynamiquement.
+\begin{itemize}
+    \item \textbf{iTunes Search API :} Fournit des extraits de 30 secondes et des métadonnées très propres. Très rapide.
+    \item \textbf{Internet Archive API :} Fournit des titres souvent complets et libres de droits.
+    \item \textbf{cURL (PHP) :} Bibliothèque utilisée pour effectuer les requêtes HTTP vers ces APIs.
+\end{itemize}
+
+% --- 5. TRAVAIL RÉALISÉ ---
+\section{Travail réalisé}
+
+\subsection{Architecture et Code}
+Le cœur de l'application repose sur l'interaction avec plusieurs services et une gestion de données locale efficace.
+
+\subsubsection{Récupération API (iTunes)}
+Voici le code gérant l'interaction avec l'API iTunes :
+
+\begin{lstlisting}[caption=Gestion de l'API iTunes (itunes.php)]
+<?php
+declare(strict_types=1);
+
+function itunes_http_get_json(string $url, int $timeout = 20): ?array {
+  $ctx = stream_context_create([
+    'http' => [
+      'method' => 'GET',
+      'timeout' => $timeout,
+      'header' => "User-Agent: PlaylistBuilder/1.0\r\nAccept: application/json\r\n",
+    ],
+  ]);
+
+  $raw = @file_get_contents($url, false, $ctx);
+  if ($raw === false) return null;
+
+  $data = json_decode($raw, true);
+  return is_array($data) ? $data : null;
+}
+// ... (Fonctions de filtrage omises pour brieveté)
+\end{lstlisting}
+
+\textbf{Analyse :} Ce script gère l'interaction avec l'API publique d'iTunes via des requêtes HTTP GET. Il filtre les résultats pour ne conserver que les morceaux correspondant à la décennie demandée et convertit les durées (ms) en secondes pour l'algorithme.
+
+\subsubsection{Complexité et Cache (Internet Archive)}
+Contrairement à iTunes, l'API d'Internet Archive est plus lente. Nous avons implémenté un cache local :
+
+\begin{lstlisting}[caption=Gestion avancée Internet Archive (archive\_api.php)]
+<?php
+declare(strict_types=1);
+
+function ia_get_metadata_cached(string $identifier, string $cacheDir, int $ttlSec): ?array {
+  ia_ensure_dir($cacheDir);
+  $safe = preg_replace('~[^a-zA-Z0-9._-]+~', '_', $identifier);
+  $path = rtrim($cacheDir, '/').'/'.$safe.'.json';
+
+  // Verification du cache (Time To Live)
+  if (is_file($path)) {
+    $age = time() - (int)@filemtime($path);
+    if ($age >= 0 && $age < $ttlSec) {
+      $raw = @file_get_contents($path);
+      if ($raw !== false) {
+        $data = json_decode($raw, true);
+        if (is_array($data)) return $data;
+      }
+    }
+  }
+
+  // Si pas en cache, on appelle l'API
+  $data = ia_get_metadata($identifier);
+  if (is_array($data)) {
+    @file_put_contents($path, json_encode($data));
+  }
+  return $data;
+}
+
+function ia_extract_mp3_tracks_from_metadata(array $meta, string $styleTerm, int $yStart, int $yEnd): array {
+  // Parsing complexe pour trouver les fichiers .mp3 dans les metadata
+  $identifier = $meta['metadata']['identifier'] ?? null;
+  // ... (Logique de filtrage des annees et formats)
+  foreach ($files as $f) {
+    if (stripos($format, 'mp3') === false) continue;
+    // ...
+  }
+  return $out;
+}
+\end{lstlisting}
+
+\textbf{Analyse :} Ce module gère la complexité de l'Internet Archive. La fonction \texttt{ia\_get\_metadata\_cached} stocke les métadonnées JSON localement pour 7 jours, évitant les lenteurs.
+
+\subsubsection{Logique Algorithmique (SmartMix Core)}
+Le "cerveau" du site assemble la playlist :
+
+\begin{lstlisting}[caption=Algorithme de remplissage (smartmix\_core.php)]
+<?php
+function smx_build_playlist(array $candidates, int $targetSec, int $seed): array {
+  $tolerance = 60;  // allow +60s
+  $maxTracks = 60;
+  smx_seeded_shuffle($candidates, $seed);
+
+  $playlist = [];
+  $sum = 0;
+
+  foreach ($candidates as $t) {
+    $d = (int)($t['duration_sec'] ?? 0);
+    if ($sum + $d <= $targetSec + $tolerance) {
+      $playlist[] = $t;
+      $sum += $d;
+    }
+    // ...
+  }
+  // (Optimisation finale pour echanger le dernier titre et gagner en precision)
+  return ['tracks' => array_values($best), 'total_sec' => (int)$bestSum];
+}
+\end{lstlisting}
+
+\textbf{Analyse :} L'algorithme principal utilise une approche gloutonne pour remplir la playlist jusqu'à la durée cible, avec une étape d'optimisation finale pour minimiser l'écart de temps.
+
+\subsubsection{Persistance des Données}
+Sauvegarde via fichiers JSON sécurisés par token :
+
+\begin{lstlisting}[caption=Système de sauvegarde fichier (storage.php)]
+<?php
+declare(strict_types=1);
+
+function pl_save(string $dir, array $payload): string {
+  pl_ensure_dir($dir);
+  // Generation d'un token unique aleatoire
+  $token = bin2hex(random_bytes(16));
+  $path = rtrim($dir, '/') . '/' . $token . '.json';
+  
+  // Sauvegarde des donnees en JSON
+  file_put_contents($path, json_encode($payload, JSON_UNESCAPED_UNICODE));
+  return $token;
+}
+
+function pl_load(string $dir, string $token): ?array {
+  // Verification de securite du format token
+  if (!preg_match('~^[a-f0-9]{32}$~', $token)) return null;
+
+  $path = rtrim($dir, '/') . '/' . $token . '.json';
+  if (!is_file($path)) return null;
+
+  $raw = file_get_contents($path);
+  $data = json_decode($raw, true);
+  return is_array($data) ? $data : null;
+}
+\end{lstlisting}
+
+\textbf{Analyse :} Chaque playlist est sauvegardée dans un fichier JSON avec un nom aléatoire (token). Cela permet le partage via URL sans base de données SQL.
+
+\subsection{Collaboration avec l'IA (Section Obligatoire)}
+Nous avons utilisé l'IA (ChatGPT/Gemini) comme assistant technique :
+\begin{itemize}
+    \item \textbf{Aide API :} L'IA nous a aidés à comprendre la structure JSON d'iTunes.
+    \item \textbf{Débogage :} Résolution de problèmes cURL et regex.
+\end{itemize}
+
+% --- 6. DIFFICULTÉS ---
+\section{Difficultés rencontrées}
+\begin{itemize}
+    \item \textbf{Hétérogénéité des données :} Il a fallu uniformiser les durées (ms vs "mm:ss") entre les deux APIs.
+    \item \textbf{Temps de réponse :} La génération peut être lente à cause des appels externes.
+    \item \textbf{Pertinence :} Le filtrage des résultats d'Internet Archive a demandé beaucoup d'ajustements.
+\end{itemize}
+
+% --- 7. BILAN ---
+\section{Bilan}
+
+\subsection{Conclusion}
+Ce projet nous a permis de manipuler des APIs REST, de traiter du JSON en PHP et de gérer les contraintes du web. L'export CSV rend l'outil fonctionnel.
+
+\subsection{Perspectives}
+Améliorations possibles : système de cache plus agressif et lecture enchaînée (autoplay).
+
+% --- 8. WEBOGRAPHIE ---
+\section{Webographie}
+\begin{itemize}
+    \item Documentation PHP : \url{https://www.php.net/}
+    \item iTunes Search API & Internet Archive API.
+\end{itemize}
+
+\newpage
+% --- 9. ANNEXES ---
+\section{Annexes}
+\appendix
+
+\subsection{Annexe A : Cahier des charges technique}
+\textbf{Entrées :} Styles, Époque, Durée. \textbf{Sorties :} Playlist HTML + CSV.
+
+
+\subsection{Annexe B : Aperçu de l'interface}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=13cm]{IMG_4846.jpeg}
+    \caption{Interface de sélection des critères}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=13cm]{IMG_4847.jpeg}
+    \caption{Liste des résultats générés}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=13cm]{IMG_4848.jpeg}
+    \caption{Lecteur audio et téléchargement}
+\end{figure}
+
+\subsection{Annexe C : Structure CSV}
+Colonnes : Titre, Artiste, Durée, URL.
+
+\end{document}
