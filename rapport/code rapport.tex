@@ -1,3 +1,4 @@
+
 \documentclass[a4paper,12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -265,11 +266,15 @@ function pl_load(string $dir, string $token): ?array {
 \textbf{Analyse :} Chaque playlist est sauvegardée dans un fichier JSON avec un nom aléatoire (token). Cela permet le partage via URL sans base de données SQL.
 
 \subsection{Collaboration avec l'IA (Section Obligatoire)}
-Nous avons utilisé l'IA (ChatGPT/Gemini) comme assistant technique :
+Nous avons utilisé l'IA (Gemini) comme assistant technique :
 \begin{itemize}
-    \item \textbf{Aide API :} L'IA nous a aidés à comprendre la structure JSON d'iTunes.
-    \item \textbf{Débogage :} Résolution de problèmes cURL et regex.
+    \item \textbf{Aide API :} L'IA nous a aidés à comprendre la structure JSON d'iTunes, à manipuler le codage du Latex et du site et aussi rédiger le Read.me.
+    \item \textbf{Débogage :} Résolution de problèmes URL et regex.
 \end{itemize}
+\subsection{Tâches non réalisées}
+Nous ne pouvons pas éouter les musiques directement sur le site en entier (que des extraits).
+\subsection{Répartition des tâches}
+Hamza a eu l'idée du site et du projet, Reda a fait le choix de l'IA. Ils ont donc mis leurs idées en commun et collaboré pour créer le projet. Hamza et Reda, grâce à Gemini ont codé le site ensemble et l'ont testé. Hamza s'est chargé des API, du JSON tandis que Reda plus du php et du "squelette". Ensuite, Reda a rédigé la majorité du rapport et Hamza s'est chargé du GitHub.
 
 % --- 6. DIFFICULTÉS ---
 \section{Difficultés rencontrées}
@@ -283,7 +288,7 @@ Nous avons utilisé l'IA (ChatGPT/Gemini) comme assistant technique :
 \section{Bilan}
 
 \subsection{Conclusion}
-Ce projet nous a permis de manipuler des APIs REST, de traiter du JSON en PHP et de gérer les contraintes du web. L'export CSV rend l'outil fonctionnel.
+Ce projet nous a permis de manipuler des APIs REST, de traiter du JSON en PHP et de gérer les contraintes du web. L'export CSV rend l'outil fonctionnel. Ce projet permet de générer des playlists intelligentes et permet un gain de temps en quelques clics.
 
 \subsection{Perspectives}
 Améliorations possibles : système de cache plus agressif et lecture enchaînée (autoplay).
@@ -293,17 +298,20 @@ Améliorations possibles : système de cache plus agressif et lecture enchaîné
 \begin{itemize}
     \item Documentation PHP : \url{https://www.php.net/}
     \item iTunes Search API & Internet Archive API.
+    \item Gemini
 \end{itemize}
 
-\newpage
 % --- 9. ANNEXES ---
 \section{Annexes}
 \appendix
 
 \subsection{Annexe A : Cahier des charges technique}
 \textbf{Entrées :} Styles, Époque, Durée. \textbf{Sorties :} Playlist HTML + CSV.
-
-
+\begin{itemize}
+ \item input utilisateur avec saisie des préférences
+  \item Moteur algorithmique avec parcours de la BD et séléction
+   \item Affichage des statistiques, musiques et bouton pour télécharger la playlist.
+\end{itemize}
 \subsection{Annexe B : Aperçu de l'interface}
 
 \begin{figure}[H]
