@@ -6,8 +6,8 @@ Ce README explique **comment installer et exécuter** SmartMix sur ton hébergem
 
 ## Pré-requis
 
-- Serveur web déjà fonctionnel (Nginx + PHP-FPM) — dans ton cas c’est OK.
-- PHP 8.x (tu es en 8.4).
+- Serveur web déjà fonctionnel (Nginx + PHP-FPM) — 
+- PHP 8.x 
 - Accès au **File Manager** du panel.
 - Le dossier racine du site est : **`webroot/`**
 
