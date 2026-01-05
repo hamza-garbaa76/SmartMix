@@ -1,37 +1,132 @@
-# SmartMix — Générateur de playlist intelligent (L2)
+# SmartMix — Instructions d’exécution (Pelican / Panel)
 
-SmartMix est une application web en **PHP 8.x** qui génère automatiquement une playlist à partir de critères choisis par l’utilisateur :
-- **Styles musicaux** (multi-sélection)
-- **Époques / décennies** (multi-sélection)
-- **Durée totale cible** (curseur)
-
-La génération se fait en “live” grâce à **deux sources de données** :
-- **Internet Archive** (pistes souvent complètes)
-- **iTunes Search API** (previews 30s, très rapide)
-
-Le résultat affiche une liste de titres (avec lecteur audio quand disponible) et permet de **télécharger la playlist en CSV**.
+Ce README explique **comment installer et exécuter** SmartMix sur ton hébergement (Pelican/Pterodactyl) **sans SSH**, uniquement via le panel.
 
 ---
 
-## Fonctionnalités
+## Pré-requis
 
-### Interface (front)
-- Sélection **multi-styles** via cases à cocher
-- Sélection **multi-époques** (décennies) via cases à cocher
-- Curseur pour choisir la **durée** (10 à 180 min)
-- Bouton **Générer**
-- Affichage des KPI : **durée cible**, **durée réelle**, **nombre de titres**
-- Liste des titres : **Titre / Artiste / Année / Durée / Source**
-- Lecteur audio HTML5 si `audio_url` est présent
-- Bouton **Télécharger CSV** (activé après génération)
-
-### Génération (back)
-- Récupération de titres via **iTunes** (rapide) puis compléments via **Internet Archive** (plus variable)
-- Construction d’une playlist visant à atteindre la durée cible (tolérance ~ ± 1 min)
-- Mélange “cohérent” : alternance des styles pour éviter une série de titres du même style
-- Sauvegarde serveur de la playlist générée (token) pour l’export CSV
+- Serveur web déjà fonctionnel (Nginx + PHP-FPM) — dans ton cas c’est OK.
+- PHP 8.x (tu es en 8.4).
+- Accès au **File Manager** du panel.
+- Le dossier racine du site est : **`webroot/`**
 
 ---
 
-## Structure du projet# SmartMix
-projet d'un générateur de playlist intelligent
+## 1) Déployer les fichiers (structure obligatoire)
+
+Dans le **File Manager**, vérifie / crée cette arborescence :
+
+webroot/
+index.php
+api/
+generate.php
+download.php
+lib/
+ia.php
+itunes.php
+playlist_store.php
+data/
+cache/
+playlists/
+
+
+###  À faire dans le panel
+1. Ouvre **File Manager**
+2. Va dans `webroot/`
+3. Crée les dossiers s’ils n’existent pas :
+   - `webroot/api/`
+   - `webroot/lib/`
+   - `webroot/data/cache/`
+   - `webroot/data/playlists/`
+4. Colle/Upload les fichiers PHP dans les bons dossiers (exactement comme ci-dessus)
+
+> Important : `data/cache/` et `data/playlists/` doivent être **écrivables** par PHP.  
+> Sur Pelican/Ptero c’est généralement OK si les dossiers existent.
+
+---
+
+## 2) Démarrer le serveur (Panel)
+
+Dans l’onglet **Console** du panel :
+
+- Clique **Start** (ou redémarre si déjà lancé).
+- Attends le message indiquant que Nginx/PHP-FPM est démarré.
+
+---
+
+## 3) Tester que le site tourne
+
+Ouvre dans ton navigateur :
+
+- Page principale :  
+  `http://node.wavescloud.fr:40171/`
+
+Tu dois voir l’interface SmartMix.
+
+---
+
+## 4) Tester l’API (diagnostic rapide)
+
+### Génération JSON
+
+ Si tout marche, tu obtiens un JSON avec :
+- `token`
+- `target_sec`
+- `total_sec`
+- `tracks[]`
+
+### Export CSV
+Copie le `token` du JSON et ouvre :
+
+
+ Ton navigateur doit télécharger un fichier `.csv`.
+
+---
+
+## 5) Résolution de problèmes
+
+### A) Page blanche / erreur 500
+1. Va dans **Console** du panel
+2. Recharge la page
+3. Regarde les logs : la ligne d’erreur PHP indique le fichier et la ligne.
+
+Erreurs fréquentes :
+- **Parse error** : tu as collé du code avec un `<?php` en trop dans un fichier.
+- **Permission denied** : `webroot/data/cache` ou `webroot/data/playlists` n’existent pas ou ne sont pas écrivable.
+
+### B) “Télécharger CSV” ne marche pas
+- Vérifie que `webroot/api/download.php` existe
+- Vérifie que `webroot/data/playlists/` existe
+- Le bouton CSV ne s’active qu’après une génération réussie (token présent)
+
+### C) Génération très lente
+La génération dépend de services externes :
+- iTunes est rapide
+- Internet Archive peut être lent (variable)
+
+Conseils :
+- coche **2–4 styles max**
+- coche **1–3 décennies max**
+- relance une génération (les caches IA peuvent accélérer)
+
+---
+
+## 6) Où modifier quoi ?
+
+- UI / design / cases à cocher : `webroot/index.php`
+- Algorithme de génération : `webroot/api/generate.php`
+- Source Internet Archive : `webroot/lib/ia.php`
+- Source iTunes : `webroot/lib/itunes.php`
+- Stockage token playlist : `webroot/lib/playlist_store.php`
+- Export CSV : `webroot/api/download.php`
+
+---
+
+## Vérification finale (checklist)
+- [ ] `webroot/index.php` existe
+- [ ] `webroot/api/generate.php` répond en JSON
+- [ ] `webroot/api/download.php?token=...` télécharge un CSV
+- [ ] `webroot/data/cache/` existe
+- [ ] `webroot/data/playlists/` existe
+- [ ] Le serveur est démarré via le panel
