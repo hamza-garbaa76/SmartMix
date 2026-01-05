@@ -130,6 +130,6 @@ Conseils :
 - [ ] `webroot/data/cache/` existe
 - [ ] `webroot/data/playlists/` existe
 - [ ] Le serveur est démarré via le panel
-## 7) Compiler le raopport 
+## 7) Compiler le rapport 
 
 Le PDF peut ne pas être prévisualisable directement sur GitHub mais le fichier peut être téléchargé et compilé à partir des sources LaTex, du code rapport du dossier 'rapport'.
